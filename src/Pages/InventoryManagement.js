@@ -39,7 +39,7 @@ const InventoryManagement = () => {
       <Typography variant="h5" align="center">Inventory Management System</Typography>
       <Grid container spacing={2}>
         {/* Sidebar for IMS Types */}
-        <Grid item xs={2}>
+        <Grid item xs={12} md={2}>
             <Box>IMS Type</Box>
           <List>
             {imsTypes.map((type, index) => (
@@ -60,7 +60,7 @@ const InventoryManagement = () => {
         </Grid>
 
         {/* Table Section */}
-        <Grid item xs={10}>
+        <Grid item xs={12} md={10}>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
