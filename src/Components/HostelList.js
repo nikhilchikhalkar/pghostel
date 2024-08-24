@@ -203,7 +203,7 @@ const HostelList = () => {
             >
             <MenuItem value="">All</MenuItem>
             <MenuItem value="Hostels">Hostels</MenuItem>
-            <MenuItem value="Hotel">Hotel</MenuItem>
+            <MenuItem value="RentHouse">Rent House</MenuItem>
             <MenuItem value="PG">PG</MenuItem>
           </Select>
         </FormControl>
@@ -212,7 +212,7 @@ const HostelList = () => {
         {/* date picker for hotel */}
 
         {
-            filterCategory === "Hotel" ? ( <Grid item xs={12} md={4}>
+            filterCategory === "RentHouse" ? ( <Grid item xs={12} md={4}>
                 <Box sx={{ display: 'flex', gap: 2 }}>
                   <DatePicker
                     label="Check-in Date"
@@ -330,7 +330,9 @@ const HostelList = () => {
                   </Grid>
                 </Box>
                 <Button
-                  sx={{ mt: 2, backgroundColor: 'green', color: 'white' }}
+                  sx={{ mt: 2, backgroundColor: 'green', color: 'white',"&:hover": {
+                    background: 'green'
+                  } }}
                   onClick={() => handleExpandClick(index)}
                   endIcon={<ExpandMoreIcon />}
                 >

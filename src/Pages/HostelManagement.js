@@ -118,6 +118,7 @@ const HostelManagement = () => {
 
     // Submit or update the form data
     console.log('Updated Data:', formData);
+    console.log('json  Data:', JSON.stringify(formData));
     // Implement actual submission logic here
   };
 
@@ -229,7 +230,11 @@ const HostelManagement = () => {
                   </Box>
                   {room.beds.length < 6 && (
                     <IconButton color="primary" onClick={() => addBed(floorIndex, roomIndex)}>
-                     Add Bed <AddCircleIcon />
+                    <Button
+                    startIcon={ <AddCircleIcon /> }
+                    variant="outlined" sx={{color:'blue', size:'0.7rem'}}>
+                      Add Bed
+                    </Button>
                     </IconButton>
                   )}
                 </Box>
@@ -239,6 +244,7 @@ const HostelManagement = () => {
                   variant="outlined"
                   startIcon={<AddCircleIcon />}
                   onClick={() => addRoom(floorIndex)}
+                  sx={{backgroundColor:'#FFDDC1'}}
                 >
                   Add Room
                 </Button>
@@ -251,7 +257,7 @@ const HostelManagement = () => {
       </Grid>
 
       {/* Update Button */}
-      <Box mt={3} textAlign="center">
+      <Box mt={3} textAlign="end" marginRight='6rem'>
         <Button
           variant="contained"
           color="success"
