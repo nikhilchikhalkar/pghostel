@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Grid, Typography, TextField, Button, IconButton, Paper, styled } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import BedRoundedIcon from '@mui/icons-material/BedRounded';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Header = styled(Box)({
   textAlign: 'center',
@@ -28,11 +29,10 @@ const CustomPaper = styled(Paper)({
 });
 
 const HostelManagement = () => {
-  // State to manage owners, floors, rooms, and beds
   const [formData, setFormData] = useState({
     hotelName: '',
     owners: [{ name: '', contact: '' }],
-    floors: [{ name: ' Floor - 1', rooms: [] }],
+    floors: [{ name: 'Floor - 1', rooms: [] }],
   });
 
   const [errors, setErrors] = useState({ ownerError: '' });
@@ -58,11 +58,23 @@ const HostelManagement = () => {
   const addRoom = (floorIndex) => {
     const updatedFloors = formData.floors.map((floor, index) => {
       if (index === floorIndex && floor.rooms.length < 5) {
-        return { ...floor, rooms: [...floor.rooms, { name: `Room ${floor.rooms.length + 1}`, beds: [] }] };
+        const newRoomIndex = floor.rooms.length + 1;
+        return { 
+          ...floor, 
+          rooms: [...floor.rooms, { name: `Room ${newRoomIndex}`, beds: [] }] 
+        };
       }
       return floor;
     });
-    setFormData({ ...formData, floors: updatedFloors });
+    // Re-index rooms after adding
+    const reIndexedFloors = updatedFloors.map(floor => ({
+      ...floor,
+      rooms: floor.rooms.map((room, idx) => ({
+        ...room,
+        name: `Room ${idx + 1}`,
+      })),
+    }));
+    setFormData({ ...formData, floors: reIndexedFloors });
   };
 
   const addBed = (floorIndex, roomIndex) => {
@@ -81,6 +93,42 @@ const HostelManagement = () => {
     setFormData({ ...formData, floors: updatedFloors });
   };
 
+  const deleteBed = (floorIndex, roomIndex, bedIndex) => {
+    const updatedFloors = formData.floors.map((floor, fIndex) => {
+      if (fIndex === floorIndex) {
+        const updatedRooms = floor.rooms.map((room, rIndex) => {
+          if (rIndex === roomIndex) {
+            return {
+              ...room,
+              beds: room.beds.filter((_, bIndex) => bIndex !== bedIndex),
+            };
+          }
+          return room;
+        });
+        return { ...floor, rooms: updatedRooms };
+      }
+      return floor;
+    });
+    setFormData({ ...formData, floors: updatedFloors });
+  };
+
+  const deleteRoom = (floorIndex, roomIndex) => {
+    const updatedFloors = formData.floors.map((floor, fIndex) => {
+      if (fIndex === floorIndex) {
+        const updatedRooms = floor.rooms.filter((_, rIndex) => rIndex !== roomIndex);
+        return {
+          ...floor,
+          rooms: updatedRooms.map((room, idx) => ({
+            ...room,
+            name: `Room ${idx + 1}`, // Re-index rooms after deletion
+          })),
+        };
+      }
+      return floor;
+    });
+    setFormData({ ...formData, floors: updatedFloors });
+  };
+
   const handleOwnerChange = (index, field, value) => {
     const updatedOwners = formData.owners.map((owner, i) =>
       i === index ? { ...owner, [field]: value } : owner
@@ -93,7 +141,6 @@ const HostelManagement = () => {
   };
 
   const validateForm = () => {
-    // Check if at least one owner has both a name and contact number
     const hasValidOwner = formData.owners.some(
       (owner) => owner.name.trim() !== '' && owner.contact.trim() !== ''
     );
@@ -103,7 +150,6 @@ const HostelManagement = () => {
       return false;
     }
 
-    // Clear errors if validation passes
     setErrors({ ownerError: '' });
     return true;
   };
@@ -111,27 +157,23 @@ const HostelManagement = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate form data before submission
     if (!validateForm()) {
       return;
     }
 
-    // Submit or update the form data
     console.log('Updated Data:', formData);
-    console.log('json  Data:', JSON.stringify(formData));
+    console.log('JSON Data:', JSON.stringify(formData));
     // Implement actual submission logic here
   };
 
   return (
     <Box p={2} component="form" onSubmit={handleSubmit}>
-      {/* Header Section */}
       <Header>
         <Typography variant="h5" fontWeight="bold">
           Management Overview
         </Typography>
       </Header>
 
-      {/* Hotel Name */}
       <Box my={2}>
         <TextField
           fullWidth
@@ -143,7 +185,6 @@ const HostelManagement = () => {
         />
       </Box>
 
-      {/* Owners Section */}
       <Grid container spacing={2}>
         {formData.owners.map((owner, index) => (
           <Grid item xs={12} md={4} key={index}>
@@ -175,14 +216,12 @@ const HostelManagement = () => {
           </Grid>
         ))}
       </Grid>
-      {/* Error Message */}
       {errors.ownerError && (
         <Typography color="error" variant="body2" sx={{ textAlign: 'center', mt: 2 }}>
           {errors.ownerError}
         </Typography>
       )}
 
-      {/* Floor Information Section */}
       <SectionTitle sx={{ marginTop: '1rem' }}>Floor Information</SectionTitle>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={12} md={2}>
@@ -196,74 +235,82 @@ const HostelManagement = () => {
           </CustomPaper>
         </Grid>
         <Grid item xs={12} md={10}>
-            <Grid container spacing={2} >
-   
-          {/* Floors List */}
-          {formData.floors.map((floor, floorIndex) => (
-            <Grid item xs={12} md={3} key={floorIndex} >
-            <Box key={floorIndex} my={2} p={2} border="1px solid #ccc" borderRadius="4px">
-              <Typography variant="h6">{floor.name}</Typography>
+          <Grid container spacing={2}>
+            {formData.floors.map((floor, floorIndex) => (
+              <Grid item xs={12} md={3} key={floorIndex}>
+                <Box my={2} p={2} border="1px solid #ccc" borderRadius="4px">
+                  <Typography variant="h6">{floor.name}</Typography>
 
-              {/* Rooms Section */}
-              {floor.rooms.map((room, roomIndex) => (
-                <Box key={roomIndex} my={1} p={1} border="1px solid #ccc" borderRadius="4px">
-                  <Typography variant="subtitle1">
-                    {room.name} - Beds: {room.beds.length}
-                  </Typography>
-                  <Box display="flex" flexWrap="wrap">
-                    <Grid container spacing={2}>
-                      {room.beds.map((bed, bedIndex) => (
-                        <Grid item xs={12} md={6} key={bedIndex}>
-                          <Box
-                            key={bedIndex}
-                            p={1}
-                            m={0.5}
-                            border="1px solid #ccc"
-                            borderRadius="4px"
-                            backgroundColor="#E0ECFF"
-                          >
-                            <BedRoundedIcon sx={{ color: 'orange' }} />
-                          </Box>
+                  {floor.rooms.map((room, roomIndex) => (
+                    <Box key={roomIndex} my={1} p={1} border="1px solid #ccc" borderRadius="4px">
+                      <Typography variant="subtitle1">
+                        {room.name} - Beds: {room.beds.length}
+                      </Typography>
+                      <Box display="flex" flexWrap="wrap">
+                        <Grid container spacing={2}>
+                          {room.beds.map((bed, bedIndex) => (
+                            <Grid item xs={12} md={6} key={bedIndex}>
+                              <Box
+                                p={1}
+                                m={0.5}
+                                border="1px solid #ccc"
+                                borderRadius="4px"
+                                backgroundColor="#E0ECFF"
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
+                              >
+                                <BedRoundedIcon sx={{ color: 'orange' }} />
+                                <IconButton color="error" onClick={() => deleteBed(floorIndex, roomIndex, bedIndex)}>
+                                  <DeleteIcon />
+                                </IconButton>
+                              </Box>
+                            </Grid>
+                          ))}
                         </Grid>
-                      ))}
-                    </Grid>
-                  </Box>
-                  {room.beds.length < 6 && (
-                    <IconButton color="primary" onClick={() => addBed(floorIndex, roomIndex)}>
+                      </Box>
+                      {room.beds.length < 6 && (
+                        <IconButton color="primary" onClick={() => addBed(floorIndex, roomIndex)}>
+                          <Button
+                            startIcon={<AddCircleIcon />}
+                            variant="outlined"
+                            sx={{ color: 'blue', size: '0.7rem' }}
+                          >
+                            Add Bed
+                          </Button>
+                        </IconButton>
+                      )}
+                      <Box mt={1}>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          startIcon={<DeleteIcon />}
+                          onClick={() => deleteRoom(floorIndex, roomIndex)}
+                        >
+                          Delete Room
+                        </Button>
+                      </Box>
+                    </Box>
+                  ))}
+                  {floor.rooms.length < 5 && (
                     <Button
-                    startIcon={ <AddCircleIcon /> }
-                    variant="outlined" sx={{color:'blue', size:'0.7rem'}}>
-                      Add Bed
+                      variant="outlined"
+                      startIcon={<AddCircleIcon />}
+                      onClick={() => addRoom(floorIndex)}
+                      sx={{ backgroundColor: '#FFDDC1' }}
+                    >
+                      Add Room
                     </Button>
-                    </IconButton>
                   )}
                 </Box>
-              ))}
-              {floor.rooms.length < 5 && (
-                <Button
-                  variant="outlined"
-                  startIcon={<AddCircleIcon />}
-                  onClick={() => addRoom(floorIndex)}
-                  sx={{backgroundColor:'#FFDDC1'}}
-                >
-                  Add Room
-                </Button>
-              )}
-            </Box>
-             </Grid>
-          ))}
-           </Grid>
+              </Grid>
+            ))}
+          </Grid>
         </Grid>
       </Grid>
 
-      {/* Update Button */}
-      <Box mt={3} textAlign="end" marginRight='6rem'>
-        <Button
-          variant="contained"
-          color="success"
-          sx={{ padding: '0.5rem 2rem' }}
-          type="submit"
-        >
+      <Box mt={3} textAlign="end" marginRight="6rem">
+        <Button variant="contained" color="success" sx={{ padding: '0.5rem 2rem' }} type="submit">
           Update the Page
         </Button>
       </Box>
