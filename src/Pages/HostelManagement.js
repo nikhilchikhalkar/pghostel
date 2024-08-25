@@ -81,7 +81,7 @@ const HostelManagement = () => {
     const updatedFloors = formData.floors.map((floor, fIndex) => {
       if (fIndex === floorIndex) {
         const updatedRooms = floor.rooms.map((room, rIndex) => {
-          if (rIndex === roomIndex && room.beds.length < 6) {
+          if (rIndex === roomIndex && room.beds.length < 20) {
             return { ...room, beds: [...room.beds, `Bed ${room.beds.length + 1}`] };
           }
           return room;
@@ -269,7 +269,7 @@ const HostelManagement = () => {
                           ))}
                         </Grid>
                       </Box>
-                      {room.beds.length < 6 && (
+                      {room.beds.length < 20 && (
                         <IconButton color="primary" onClick={() => addBed(floorIndex, roomIndex)}>
                           <Button
                             startIcon={<AddCircleIcon />}
