@@ -42,35 +42,35 @@ const HostelRooms = () => {
   ]
 
 //   const [selectedFloor, setSelectedFloor] = useState('');
-  const [expandedroomDetails, setexpandedroomDetails] = useState(null);
+  // const [expandedroomDetails, setexpandedroomDetails] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
 
   const facilities = [
-    { label: '3 times food', isCorrect: false },
-    { label: 'Wi-Fi', isCorrect: true },
-    { label: 'Lift', isCorrect: false },
-    { label: 'Drinking water (RO water)', isCorrect: false },
-    { label: 'Hot water', isCorrect: false },
-    { label: '24/7 water supply', isCorrect: true },
-    { label: 'Power supply', isCorrect: false },
-    { label: 'AC/Non AC', isCorrect: false },
-    { label: 'Lockers/ Racks', isCorrect: false },
-    { label: '24/7 CCTV surveillance', isCorrect: true },
-    { label: 'Fully furnished/ Not', isCorrect: false },
-    { label: 'Daily cleaning & housekeeping services', isCorrect: true },
-    { label: 'Washing machine', isCorrect: false },
-    { label: 'Security guard', isCorrect: false },
-    { label: 'Power backup', isCorrect: false },
-    { label: 'Bed, bedsheet, pillow', isCorrect: false },
-    { label: 'Laundry service', isCorrect: false },
-    { label: 'Study table', isCorrect: false },
-    { label: 'Biometric security', isCorrect: true },
-    { label: 'Shuttle facility', isCorrect: false },
-    { label: 'Tea (or) coffee machines', isCorrect: false },
-    { label: 'First aid kit', isCorrect: true },
-    { label: 'Table tennis kit', isCorrect: false },
-    { label: 'Gym', isCorrect: true },
+    { label: '3 times food', isToggled: false },
+    { label: 'Wi-Fi', isToggled: true },
+    { label: 'Lift', isToggled: false },
+    { label: 'Drinking water (RO water)', isToggled: false },
+    { label: 'Hot water', isToggled: false },
+    { label: '24/7 water supply', isToggled: true },
+    { label: 'Power supply', isToggled: false },
+    { label: 'AC/Non AC', isToggled: false },
+    { label: 'Lockers/ Racks', isToggled: false },
+    { label: '24/7 CCTV surveillance', isToggled: true },
+    { label: 'Fully furnished/ Not', isToggled: false },
+    { label: 'Daily cleaning & housekeeping services', isToggled: true },
+    { label: 'Washing machine', isToggled: false },
+    { label: 'Security guard', isToggled: false },
+    { label: 'Power backup', isToggled: false },
+    { label: 'Bed, bedsheet, pillow', isToggled: false },
+    { label: 'Laundry service', isToggled: false },
+    { label: 'Study table', isToggled: false },
+    { label: 'Biometric security', isToggled: true },
+    { label: 'Shuttle facility', isToggled: false },
+    { label: 'Tea (or) coffee machines', isToggled: false },
+    { label: 'First aid kit', isToggled: true },
+    { label: 'Table tennis kit', isToggled: false },
+    { label: 'Gym', isToggled: true },
   ];
   
 
@@ -84,9 +84,9 @@ const HostelRooms = () => {
     setSelectedRoom(null);
   };
 
-  const handleExpandClick = (index) => {
-    setexpandedroomDetails(expandedroomDetails === index ? null : index);
-  };
+  // const handleExpandClick = (index) => {
+  //   setexpandedroomDetails(expandedroomDetails === index ? null : index);
+  // };
 
 //   const handleChange = (event) => {
 //     setSelectedFloor(event.target.value);
@@ -153,7 +153,7 @@ const HostelRooms = () => {
 
 
         {/* Dialog for Facilities */}
-        <Dialog open={dialogOpen} onClose={handleCloseDialog}  fullWidth maxWidth="sm">
+        <Dialog open={dialogOpen} onClose={handleCloseDialog}  fullWidth maxWidth="md">
         <DialogTitle>
           Room {selectedRoom} Facilities
           <IconButton
@@ -165,7 +165,7 @@ const HostelRooms = () => {
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        <DialogContent sx={{overflow:'hidden'}}>
+        <DialogContent sx={{overflowY:'auto'}}>
           <Typography variant="body1">
             {/* Replace with your actual facilities content */}
             {/* Facilities for Room {selectedRoom} */}
@@ -174,7 +174,7 @@ const HostelRooms = () => {
                   {facilities.map((facility, index) => (
                 <Grid item xs={12} sm={6} md={4}>
                     <Box key={index} display="flex" alignItems="center" mb={1}>
-                      {facility.isCorrect ? (
+                      {facility.isToggled ? (
                         <CheckIcon sx={{ color: 'green', marginRight: 1 }} />
                       ) : (
                         <CloseIcon sx={{ color: 'red', marginRight: 1 }} />

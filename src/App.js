@@ -7,6 +7,7 @@ import HostelManagement from './Pages/HostelManagement';
 import InventoryManagement from './Pages/InventoryManagement';
 import MenuSystem from './Pages/MenuSystem';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AddMenuSystem from './Pages/AddMenuSystem';
 function App() {
   return (
     <div className="App">
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path='/' element={<InventoryManagement/>}  />
         <Route path='/menu' element={<MenuSystem/>}  />
+        <Route path='/addmenu' element={<AddMenuSystem/>}  />
         <Route path='/hotelmanagement' element={<HostelManagement/>}  />
         <Route path='/hotel-list' element={<LocalizationProvider dateAdapter={AdapterDayjs}>
       <HostelList/>
